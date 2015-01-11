@@ -1,0 +1,63 @@
+{"swagger":"2.0",
+	"info":{
+		"description":"Documentacao simples para exibir os metodos disponibilizados no teste. <br>Esta breve api utiliza python e tornadoweb.<br/><br/>Desafio sugerido por Renato Pedigoni.<br/> A solicitacao é que fosse produzido um codigo simples para validar minha forma de programar.<br>Para este teste foi utilizado o banco de dados SQLite por ser altamente portavel e de facil manuseio para realizacao de testes.<br>Para abstracao da execução das querys junto ao banco de dados foi utilizado o SQLAlchemy, é facil de ser utilizado e atende muito bem ao padrao ORM.<br>Documentado utilizando o projeto aberto swagger.io<br><br>Code review pode ser feito dando o fork no git.",
+		"version":"0.0.1",
+		"title":"Desafio LuizaLabs",
+		"termsOfService":"-",
+		"contact":{"name":"laercio.patricio@gmail.com"}},
+		"host":"petstore.swagger.wordnik.com","basePath":"/v2","schemes":["http"],
+		"paths":{"/person/":
+			{"post":{"tags": ["person"] ,"summary":"Valida a existencia do usuario na base, caso ele ainda nao tenha sido salvo, busca as informacoes dele no facebook" ,"description":"",
+			"operationId":"listperson",
+			"consumes":["application/x-www-form-urlencoded"],
+			"produces":["application/json"],
+			"parameters":[
+				{"in":"formData","name":"facebookId","type": "integer",
+				"description":"Espera que seja enviado o facebookId numerico do usuario",
+				"required":true}],
+				"responses":{"500":{"description":"Usuario ja consta na base de dados"},
+				"400":{"description":"Usuario nao encontrado no facebook"},
+				"200":{"description":"Usuario corretamente incluido"}},
+				"security":[{"petstore_auth":["write:pets","read:pets"]}]},
+			"get":{"tags": ["person"] ,
+				"summary":"lista os usuarios na base de dados",
+				"description":"",
+				"operationId":"list",
+				"consumes":["application/x-www-form-urlencoded"],
+				"produces":["application/json"],
+				"parameters":[{"in":"querystring","type": "integer","name":"limit","description":"Limita a quantidade de retornos",
+				"required":false
+				}],
+				"responses":{
+					"500":{"description":"Erro ao fazer chamada ao servidor"},
+					"200":{"description":"Listagem corretamente exibida"}},
+					"security":[{"petstore_auth":["write:pets","read:pets"]}]}},
+			"/person/{facebookId}":
+			{"delete":{"tags": ["person"] ,"summary":"Remove o usuario do resgatado pelo facebookId." ,"description":"",
+			"operationId":"listperson",
+			"consumes":["application/x-www-form-urlencoded"],
+			"produces":["application/json"],
+			"parameters":[
+				{"in":"url","name":"facebookId","type": "integer",
+				"description":"Espera que seja enviado o facebookId numerico do usuario",
+				"required":true}],
+				"responses":{"500":{"description":"Demais erros nao esperados" },
+				"400":{"description":"Usuario ja consta na base de dados"},
+				"204":{"description":"Excluido com sucesso"}},
+				"security":[{"petstore_auth":["write:pets","read:pets"]}]},
+			"get":{"tags": ["person"] ,
+				"summary":"lista os usuarios na base de dados",
+				"description":"",
+				"operationId":"list",
+				"consumes":["application/x-www-form-urlencoded"],
+				"produces":["application/json"],
+				"parameters":[{"in":"formData","type": "integer","name":"facebookId","description":"Retorna a copia do usuario registrado na base de dados",
+				"required":true
+				}],
+				"responses":{
+					"404":{"description":"Usuario nao encontrado de acordo o facebookId enviado"},
+					"400":{"description":"facebookId enviado de forma invalida"},
+					"200":{"description":"Usuario encontrado e exibido"}},
+					"security":[{"petstore_auth":["write:pets","read:pets"]}]}}
+		}
+	}

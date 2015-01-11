@@ -1,0 +1,11 @@
+Markdown==2.5.2
+Pycco==0.3.0
+Pygments==2.0.1
+SQLAlchemy==0.9.8
+backports.ssl-match-hostname==3.4.0.2
+certifi==14.05.14
+pysqlite==2.6.3
+pystache==0.5.4
+smartypants==1.8.6
+tornado==4.0.2
+wsgiref==0.1.2
