@@ -1,8 +1,6 @@
 # Desafio Luizalab
 
-Documentacao simples para exibir os metodos disponibilizados no teste. 
-
-Esta breve api utiliza python e tornadoweb.
+Esta breve api foi produzida utilizando python[#is_life] e tornadoweb.
 
 Desafio sugerido por Renato Pedigoni.
 
