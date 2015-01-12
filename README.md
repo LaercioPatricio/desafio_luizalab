@@ -18,6 +18,35 @@ Code review pode ser feito por este repositório.
 Para inicializar o projeto utilize o requeriments.txt
 /luizalabs/requeriments.txt
 
+```bash
+# inicializando
+$ git clone https://github.com/LaercioPatricio/desafio_luizalab
+$ cd 'folder'
+$ mkdir env
+$ virtualenv env
+$ source env/bin/activate
+$ cd [project_dir]
+$ pip install -r requiments.txt
+..
+python app.py
+
+```
+Pronto projeto rodando agora é só utilizar a url no seu navegador
+http://localhost:5000/static/docs/index.html
+
+
+### Rodando os testes do CRUD utilizando a abstração programada por mim
+```bash
+
+python test_crud.py
+
+```
+### Rodando os testes do tornadoweb utilizando urls da API produzida como desafio
+
+python test_tornado_app.py
+
+```
+
 ## Documentação
 Para vizualizar a documentação dos serviços expostos, após rodar o projeto utilize o endereço http://localhost:5000/static/docs/index.html
 
