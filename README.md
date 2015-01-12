@@ -43,6 +43,7 @@ python test_crud.py
 ```
 ### Rodando os testes do tornadoweb utilizando urls da API produzida como desafio
 
+```bash
 python test_tornado_app.py
 
 ```
