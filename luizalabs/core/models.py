@@ -1,5 +1,14 @@
 # This Python file uses the following encoding: utf-8
 # -*- coding: utf-8 -*-
+# -*- coding: utf-8 -*-
+"""
+# DESAFIO LUIZALABS
+autor: @LaercioPatricio <br />
+project: @luizalabs
+<br>
+>Abstracao para o acesso ao banco, afim de manter uma inteface unica acima do sqlalchemy, diminuindo a visibilidade de consumidor final, para caso seja necessario alterar o acesso aos dados o código final não seja alterado
+"""
+
 import logging
 import tornado.web
 from sqlalchemy import Column, Integer

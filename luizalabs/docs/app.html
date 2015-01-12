@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="content-type" content="text/html;charset=utf-8">
+  <title>app.py</title>
+  <link rel="stylesheet" href="pycco.css">
+</head>
+<body>
+<div id="background"></div>
+<div id='container'>
+  <div class='section'>
+    <div class='docs'><h1>app.py</h1></div>
+  </div>
+  <div class='clearall'>
+  <div class='section' id='section-0'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-0'>#</a>
+      </div>
+      <h1>DESAFIO LUIZALABS</h1>
+<p>autor: @LaercioPatricio <br />
+project: @luizalabs
+<br></p>
+<blockquote>
+<p>Esta breve api foi produzida utilizando python[#is_life] e tornadoweb.<br>
+Desafio sugerido por Renato Pedigoni.<br>
+A solicitacao é que fosse produzido um codigo simples para validar minha forma de programar.<br>
+Para este teste foi utilizado o banco de dados SQLite por ser altamente portavel e de facil manuseio para realizacao de testes.<br>
+Para abstracao da execução das querys junto ao banco de dados foi utilizado o SQLAlchemy, é facil de ser utilizado e atende muito bem ao padrao ORM.<br></p>
+</blockquote>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">logging</span>
+<span class="kn">import</span> <span class="nn">tornado.ioloop</span>
+<span class="kn">import</span> <span class="nn">tornado.httpserver</span>
+<span class="kn">import</span> <span class="nn">tornado.options</span>
+
+<span class="kn">from</span> <span class="nn">tornado.web</span> <span class="kn">import</span> <span class="n">url</span>
+<span class="kn">from</span> <span class="nn">person.handlers</span> <span class="kn">import</span> <span class="n">PersonHandler</span>
+<span class="kn">import</span> <span class="nn">person.models.personmodel</span> <span class="kn">as</span> <span class="nn">pmodel</span>
+<span class="kn">from</span> <span class="nn">sqlalchemy</span> <span class="kn">import</span> <span class="n">create_engine</span>
+<span class="kn">from</span> <span class="nn">sqlalchemy.orm</span> <span class="kn">import</span> <span class="n">scoped_session</span><span class="p">,</span> <span class="n">sessionmaker</span>
+<span class="kn">import</span> <span class="nn">settings</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-1'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-1'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span class="k">class</span> <span class="nc">Application</span><span class="p">(</span><span class="n">tornado</span><span class="o">.</span><span class="n">web</span><span class="o">.</span><span class="n">Application</span><span class="p">):</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-2'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-2'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">urlpatterns</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="n">url</span><span class="p">(</span><span class="s">r&#39;/person/$&#39;</span><span class="p">,</span> <span class="n">PersonHandler</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s">&#39;person_route_list&#39;</span><span class="p">),</span>
+            <span class="n">url</span><span class="p">(</span><span class="s">r&#39;/person/([\d]+)?&#39;</span><span class="p">,</span> <span class="n">PersonHandler</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s">&#39;person_route_access&#39;</span><span class="p">),</span>
+        <span class="p">]</span>
+
+        <span class="n">tornado</span><span class="o">.</span><span class="n">web</span><span class="o">.</span><span class="n">Application</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">urlpatterns</span><span class="p">,</span> <span class="o">**</span><span class="n">settings</span><span class="o">.</span><span class="n">config</span><span class="p">)</span>
+        <span class="n">engine</span> <span class="o">=</span> <span class="n">create_engine</span><span class="p">(</span><span class="n">settings</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s">&#39;database_path&#39;</span><span class="p">],</span> <span class="n">convert_unicode</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">echo</span><span class="o">=</span><span class="n">settings</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s">&#39;debug&#39;</span><span class="p">])</span>
+        <span class="n">pmodel</span><span class="o">.</span><span class="n">init_db</span><span class="p">(</span><span class="n">engine</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">data_access</span> <span class="o">=</span> <span class="n">scoped_session</span><span class="p">(</span><span class="n">sessionmaker</span><span class="p">(</span><span class="n">bind</span><span class="o">=</span><span class="n">engine</span><span class="p">))</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-3'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-3'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
+
+    <span class="n">log_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">settings</span><span class="o">.</span><span class="n">ROOT_PATH</span><span class="p">,</span> <span class="s">&#39;_log&#39;</span><span class="p">)</span>
+    <span class="n">logging</span><span class="o">.</span><span class="n">basicConfig</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="n">log_path</span><span class="p">,</span> 
+                        <span class="n">format</span><span class="o">=</span><span class="s">&#39;</span><span class="si">%(asctime)s</span><span class="s"> </span><span class="si">%(message)s</span><span class="s">&#39;</span><span class="p">)</span>
+    <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s">&#39; call: __app_init__&#39;</span><span class="p">)</span>
+    
+    <span class="n">tornado</span><span class="o">.</span><span class="n">options</span><span class="o">.</span><span class="n">parse_command_line</span><span class="p">()</span>
+    <span class="n">http_server</span> <span class="o">=</span> <span class="n">tornado</span><span class="o">.</span><span class="n">httpserver</span><span class="o">.</span><span class="n">HTTPServer</span><span class="p">(</span><span class="n">Application</span><span class="p">())</span>
+    <span class="n">http_server</span><span class="o">.</span><span class="n">listen</span><span class="p">(</span><span class="n">settings</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s">&#39;port&#39;</span><span class="p">])</span>
+    <span class="n">tornado</span><span class="o">.</span><span class="n">ioloop</span><span class="o">.</span><span class="n">IOLoop</span><span class="o">.</span><span class="n">instance</span><span class="p">()</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
+
+<span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="s">&#39;__main__&#39;</span><span class="p">:</span>
+    <span class="n">main</span><span class="p">()</span>
+
+</pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+</div>
+</body>

@@ -1,3 +1,15 @@
+# -*- coding: utf-8 -*-
+"""
+# DESAFIO LUIZALABS
+autor: @LaercioPatricio <br />
+project: @luizalabs
+<br>
+>Esta breve api foi produzida utilizando python[#is_life] e tornadoweb.<br>
+>Desafio sugerido por Renato Pedigoni.<br>
+>A solicitacao é que fosse produzido um codigo simples para validar minha forma de programar.<br>
+>Para este teste foi utilizado o banco de dados SQLite por ser altamente portavel e de facil manuseio para realizacao de testes.<br>
+>Para abstracao da execução das querys junto ao banco de dados foi utilizado o SQLAlchemy, é facil de ser utilizado e atende muito bem ao padrao ORM.<br>
+"""
 import os
 import logging
 import tornado.ioloop
@@ -10,9 +22,6 @@ import person.models.personmodel as pmodel
 from sqlalchemy import create_engine
 from sqlalchemy.orm import scoped_session, sessionmaker
 import settings
-"""
-Create and manage a new sqlite database.
-"""
 
 class Application(tornado.web.Application):
 
@@ -28,11 +37,7 @@ class Application(tornado.web.Application):
         self.data_access = scoped_session(sessionmaker(bind=engine))
 
 def main():
-    """This function translates foo into bar
 
-    :param foo: A string to be converted
-    :returns: A bar formatted string
-    """    
     log_path = os.path.join(settings.ROOT_PATH, '_log')
     logging.basicConfig(filename=log_path, 
                         format='%(asctime)s %(message)s')

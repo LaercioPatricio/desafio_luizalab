@@ -1,7 +1,16 @@
+# -*- coding: utf-8 -*-
+"""
+# DESAFIO LUIZALABS
+autor: @LaercioPatricio <br />
+project: @luizalabs
+<br>
+>Abstracao para o RequestHandler do Tornado para encapsular constantes de codigo de retorno HTTP, para evitar numeros magicos<br>
+>Auxilio para acesso a instancia de banco de dados e auxilio para requisicao e tratamento das variaveis enviadas pela requisicao.
+"""
+
 import tornado.web
 import urllib
 import logging
-
 
 class BaseHandler(tornado.web.RequestHandler):
 	SUPPORTED_METHODS = ("CONNECT", "GET", "HEAD", "POST", "DELETE", "PATCH", "PUT", "OPTIONS")

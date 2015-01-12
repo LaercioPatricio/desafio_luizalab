@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="content-type" content="text/html;charset=utf-8">
+  <title>utils.py</title>
+  <link rel="stylesheet" href="../pycco.css">
+</head>
+<body>
+<div id="background"></div>
+<div id='container'>
+  <div class='section'>
+    <div class='docs'><h1>utils.py</h1></div>
+  </div>
+  <div class='clearall'>
+  <div class='section' id='section-0'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-0'>#</a>
+      </div>
+      <p>-<em>- coding: utf-8 -</em>-</p>
+<h1>DESAFIO LUIZALABS</h1>
+<p>autor: @LaercioPatricio <br />
+project: @luizalabs
+<br></p>
+<blockquote>
+<p>Paginador separado para evitar duplicacao de codigo em uma funcao altamente desacoplavel</p>
+</blockquote>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span class="kn">from</span> <span class="nn">math</span> <span class="kn">import</span> <span class="n">ceil</span>
+
+<span class="n">MAX_UNLIMITED_PAGE</span> <span class="o">=</span> <span class="mi">100</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-1'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-1'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span class="k">def</span> <span class="nf">Pagination</span> <span class="p">(</span><span class="n">page</span><span class="p">,</span> <span class="n">limit</span><span class="p">,</span> <span class="n">total_count</span><span class="p">):</span>
+	<span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span> <span class="n">page</span><span class="p">,</span> <span class="nb">int</span> <span class="p">)</span> <span class="ow">or</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span> <span class="n">limit</span><span class="p">,</span> <span class="nb">int</span> <span class="p">)</span> <span class="ow">or</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span> <span class="n">total_count</span><span class="p">,</span> <span class="nb">int</span> <span class="p">):</span>
+		<span class="k">raise</span> <span class="ne">TypeError</span>
+
+	<span class="k">if</span> <span class="n">total_count</span> <span class="o">==</span> <span class="mi">0</span> <span class="ow">or</span> <span class="n">limit</span> <span class="o">==</span> <span class="mi">0</span> <span class="ow">or</span> <span class="n">page</span> <span class="o">&lt;</span> <span class="mi">0</span> <span class="p">:</span>
+		<span class="k">raise</span> <span class="ne">NameError</span><span class="p">(</span><span class="s">&#39;InvalidPagination&#39;</span><span class="p">)</span>
+
+	<span class="n">pages</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">ceil</span><span class="p">(</span><span class="n">total_count</span> <span class="o">/</span> <span class="nb">float</span><span class="p">(</span><span class="nb">min</span><span class="p">(</span><span class="n">limit</span><span class="p">,</span> <span class="n">MAX_UNLIMITED_PAGE</span><span class="p">))))</span>
+
+	<span class="k">if</span> <span class="n">page</span> <span class="o">&gt;</span> <span class="n">pages</span> <span class="p">:</span>
+		<span class="k">raise</span> <span class="ne">NameError</span><span class="p">(</span><span class="s">&#39;InvalidPageRange&#39;</span><span class="p">)</span>
+
+	<span class="n">index_from</span> <span class="o">=</span> <span class="n">page</span> <span class="o">*</span> <span class="n">limit</span> 
+	<span class="n">index_to</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">index_from</span> <span class="o">+</span> <span class="n">limit</span><span class="p">,</span> <span class="n">total_count</span><span class="p">)</span>
+
+	<span class="k">return</span> <span class="p">{</span><span class="s">&#39;pages&#39;</span><span class="p">:</span> <span class="n">pages</span><span class="p">,</span>
+			<span class="s">&#39;page&#39;</span><span class="p">:</span> <span class="n">page</span><span class="p">,</span>
+			<span class="s">&#39;total_count&#39;</span><span class="p">:</span> <span class="n">total_count</span><span class="p">,</span>
+			<span class="s">&#39;limit&#39;</span><span class="p">:</span> <span class="n">limit</span><span class="p">,</span>
+			<span class="s">&#39;has_next&#39;</span><span class="p">:</span> <span class="n">page</span> <span class="o">&lt;</span> <span class="n">pages</span><span class="p">,</span>
+			<span class="s">&#39;has_preview&#39;</span><span class="p">:</span> <span class="n">page</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">}</span>
+
+</pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+</div>
+</body>

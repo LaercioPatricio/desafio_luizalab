@@ -1,3 +1,12 @@
+# -*- coding: utf-8 -*-
+# -*- coding: utf-8 -*-
+"""
+# DESAFIO LUIZALABS
+autor: @LaercioPatricio <br />
+project: @luizalabs
+<br>
+>Paginador separado para evitar duplicacao de codigo em uma funcao altamente desacoplavel
+"""
 from math import ceil
 
 MAX_UNLIMITED_PAGE = 100

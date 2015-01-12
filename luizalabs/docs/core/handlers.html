@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="content-type" content="text/html;charset=utf-8">
+  <title>handlers.py</title>
+  <link rel="stylesheet" href="../pycco.css">
+</head>
+<body>
+<div id="background"></div>
+<div id='container'>
+  <div class='section'>
+    <div class='docs'><h1>handlers.py</h1></div>
+  </div>
+  <div class='clearall'>
+  <div class='section' id='section-0'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-0'>#</a>
+      </div>
+      <h1>DESAFIO LUIZALABS</h1>
+<p>autor: @LaercioPatricio <br />
+project: @luizalabs
+<br></p>
+<blockquote>
+<p>Abstracao para o RequestHandler do Tornado para encapsular constantes de codigo de retorno HTTP, para evitar numeros magicos<br>
+Auxilio para acesso a instancia de banco de dados e auxilio para requisicao e tratamento das variaveis enviadas pela requisicao.</p>
+</blockquote>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span class="kn">import</span> <span class="nn">tornado.web</span>
+<span class="kn">import</span> <span class="nn">urllib</span>
+<span class="kn">import</span> <span class="nn">logging</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-1'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-1'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span class="k">class</span> <span class="nc">BaseHandler</span><span class="p">(</span><span class="n">tornado</span><span class="o">.</span><span class="n">web</span><span class="o">.</span><span class="n">RequestHandler</span><span class="p">):</span>
+	<span class="n">SUPPORTED_METHODS</span> <span class="o">=</span> <span class="p">(</span><span class="s">&quot;CONNECT&quot;</span><span class="p">,</span> <span class="s">&quot;GET&quot;</span><span class="p">,</span> <span class="s">&quot;HEAD&quot;</span><span class="p">,</span> <span class="s">&quot;POST&quot;</span><span class="p">,</span> <span class="s">&quot;DELETE&quot;</span><span class="p">,</span> <span class="s">&quot;PATCH&quot;</span><span class="p">,</span> <span class="s">&quot;PUT&quot;</span><span class="p">,</span> <span class="s">&quot;OPTIONS&quot;</span><span class="p">)</span>
+	<span class="n">HTTP_STATUS_CODE_INTERNAL_ERROR</span> <span class="o">=</span> <span class="mi">500</span>
+	<span class="n">HTTP_STATUS_CODE_NOT_FOUND</span> <span class="o">=</span> <span class="mi">404</span>
+	<span class="n">HTTP_STATUS_CODE_CREATED</span> <span class="o">=</span> <span class="mi">201</span>
+	<span class="n">HTTP_STATUS_CODE_NO_CONTENT</span> <span class="o">=</span> <span class="mi">204</span>
+	<span class="n">HTTP_STATUS_CODE_NOT_MODIFIED</span> <span class="o">=</span> <span class="mi">304</span>
+	<span class="n">HTTP_STATUS_CODE_BAD_REQUEST</span> <span class="o">=</span> <span class="mi">400</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-2'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-2'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>	<span class="nd">@property</span>
+	<span class="k">def</span> <span class="nf">_data_access</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+		<span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">application</span><span class="o">.</span><span class="n">data_access</span>
+
+	<span class="k">def</span> <span class="nf">getJsonData</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+		<span class="k">try</span><span class="p">:</span>
+			<span class="kn">import</span> <span class="nn">simplejson</span> <span class="kn">as</span> <span class="nn">json</span>
+		<span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
+			<span class="kn">import</span> <span class="nn">json</span>
+
+		<span class="k">try</span><span class="p">:</span>
+			<span class="k">return</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">request</span><span class="o">.</span><span class="n">body</span><span class="p">)</span>
+		<span class="k">except</span><span class="p">:</span>
+			<span class="k">try</span><span class="p">:</span>
+				<span class="k">return</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">urllib</span><span class="o">.</span><span class="n">unquote_plus</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">request</span><span class="o">.</span><span class="n">body</span><span class="p">))</span>
+			<span class="k">except</span><span class="p">:</span>
+				<span class="k">raise</span> <span class="ne">NameError</span><span class="p">(</span><span class="s">&#39;InvalidData&#39;</span><span class="p">)</span>
+
+
+	<span class="k">def</span> <span class="nf">post_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">raise_ifnull</span><span class="o">=</span><span class="bp">False</span><span class="p">):</span>
+		<span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">request</span><span class="o">.</span><span class="n">body_arguments</span><span class="o">.</span><span class="n">has_key</span><span class="p">(</span><span class="n">key</span><span class="p">):</span>
+			<span class="n">item</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">request</span><span class="o">.</span><span class="n">body_arguments</span><span class="p">[</span><span class="n">key</span><span class="p">]</span>
+			<span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">item</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+				<span class="k">return</span> <span class="n">item</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+			<span class="k">else</span><span class="p">:</span>
+				<span class="k">return</span> <span class="n">item</span>
+
+		<span class="k">else</span><span class="p">:</span>
+			<span class="k">if</span> <span class="n">raise_ifnull</span><span class="p">:</span>
+				<span class="n">logging</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s">&#39;call: basehandler::post_data - error_to_name_request: </span><span class="si">%s</span><span class="s">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">key</span><span class="p">))</span>
+				<span class="k">raise</span> <span class="ne">NameError</span><span class="p">(</span><span class="s">&#39;InvalidBodyParamn&#39;</span><span class="p">)</span>
+			<span class="k">else</span><span class="p">:</span>
+				<span class="k">return</span> <span class="s">&#39;&#39;</span>
+
+</pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+</div>
+</body>
