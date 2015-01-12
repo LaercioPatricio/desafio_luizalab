@@ -15,8 +15,8 @@ Documentado utilizando o projeto aberto swagger.io
 Code review pode ser feito por este repositório.
 
 ## Executando o projeto
-Para inicializar o projeto utilize o requeriments.txt
-/luizalabs/requeriments.txt
+Para executar o projeto monte o virtualenv para testes, baseado nos requeriments no projeto e utilize o arquivo app.py.
+Segue brevemente como fazer isso:
 
 ```bash
 # inicializando
