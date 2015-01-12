@@ -25,10 +25,10 @@ $ cd 'folder'
 $ mkdir env
 $ virtualenv env
 $ source env/bin/activate
-$ cd [project_dir]
-$ pip install -r requiments.txt
+$ (env)cd [project_dir]
+$ (env)pip install -r requiments.txt
 ..
-python app.py
+$ (env)python app.py
 
 ```
 Pronto projeto rodando agora é só utilizar a url no seu navegador
