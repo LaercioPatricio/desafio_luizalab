@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from tornado import ioloop , gen 
 from tornado.httpclient import *
 from tornado.web import asynchronous, RequestHandler, Application 

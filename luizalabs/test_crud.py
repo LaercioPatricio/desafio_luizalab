@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 import random
 import unittest
 from person.models import Person
