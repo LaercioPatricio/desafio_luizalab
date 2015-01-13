@@ -4,16 +4,28 @@
 autor: @LaercioPatricio <br />
 project: @luizalabs
 <br>
->Abstracao para o RequestHandler do Tornado para encapsular constantes de codigo de retorno HTTP, para evitar numeros magicos<br>
->Auxilio para acesso a instancia de banco de dados e auxilio para requisicao e tratamento das variaveis enviadas pela requisicao.
+>Abstracao para o RequestHandler do Tornado para encapsular
+constantes de codigo de retorno HTTP, para evitar numeros magicos<br>
+>Auxilio para acesso a instancia de banco de dados e auxilio para
+requisicao e tratamento das variaveis enviadas pela requisicao.
 """
 
 import tornado.web
 import urllib
 import logging
 
+
 class BaseHandler(tornado.web.RequestHandler):
-	SUPPORTED_METHODS = ("CONNECT", "GET", "HEAD", "POST", "DELETE", "PATCH", "PUT", "OPTIONS")
+	SUPPORTED_METHODS = (
+		"CONNECT",
+		"GET",
+		"HEAD",
+		"POST",
+		"DELETE",
+		"PATCH",
+		"PUT",
+		"OPTIONS"
+		)
 	HTTP_STATUS_CODE_INTERNAL_ERROR = 500
 	HTTP_STATUS_CODE_NOT_FOUND = 404
 	HTTP_STATUS_CODE_CREATED = 201
@@ -39,9 +51,8 @@ class BaseHandler(tornado.web.RequestHandler):
 			except:
 				raise NameError('InvalidData')
 
-
 	def post_data(self, key, raise_ifnull=False):
-		if self.request.body_arguments.has_key(key):
+		if key in self.request.body_arguments:
 			item = self.request.body_arguments[key]
 			if len(item) == 1:
 				return item[0]
@@ -50,7 +61,8 @@ class BaseHandler(tornado.web.RequestHandler):
 
 		else:
 			if raise_ifnull:
-				logging.error('call: basehandler::post_data - error_to_name_request: %s' % (key))
+				logging.error('call: basehandler::post_data -\
+					error_to_name_request: %s' % (key))
 				raise NameError('InvalidBodyParamn')
 			else:
 				return ''

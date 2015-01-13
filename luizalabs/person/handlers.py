@@ -20,22 +20,30 @@ from person.models import Person
 import settings
 import core.utils as utils
 
+
 class PersonHandler(BaseHandler):
-	#Segurança dos dados 
 	def validate_facebookid(self, facebookId):
 		match_validate = re.match(r'^[0-9]+$', facebookId)
 		if not match_validate:
 			self.clear()
 			logging.error("call PersonHandler::post - facebookid invalido")
-			raise tornado.web.HTTPError(self.HTTP_STATUS_CODE_BAD_REQUEST, 'facebookId invalido')
+			raise tornado.web.HTTPError(
+				self.HTTP_STATUS_CODE_BAD_REQUEST,
+				'facebookId invalido'
+				)
 
 	# Trata a requisição para o caso o resgate de somente um person 
 	def render_strategy_unique(self, facebookId):
 		try:
 			person = Person.one(self._data_access, facebookId=facebookId)
 		except:
-			logging.error("call PersonHandler::render_strategy_unique - facebookid invalido")
-			raise tornado.web.HTTPError(self.HTTP_STATUS_CODE_NOT_FOUND, 'facebookId invalido')
+			logging.error(
+				"call PersonHandler::render_strategy_unique - facebookid invalido"
+				)
+			raise tornado.web.HTTPError(
+				self.HTTP_STATUS_CODE_NOT_FOUND,
+				'facebookId invalido'
+				)
 
 		return json.dumps(person.as_dict())
 
@@ -47,27 +55,41 @@ class PersonHandler(BaseHandler):
 			limit = utils.MAX_UNLIMITED_PAGE
 			start = 0
 
-		pagination = utils.Pagination(page=int(page), limit=int(limit), total_count=Person.count(self._data_access))
-		
+		pagination = utils.Pagination(
+			page=int(page),
+			limit=int(limit),
+			total_count=Person.count(self._data_access)
+			)
+
 		if start == -1:
 			start = int(pagination['page']*pagination['limit'])-1
 
 		try:
-			persons = Person.get_page(self._data_access, 
-									limit=pagination['limit'], 
-									offset=start).all()
+			persons = Person.get_page(
+				self._data_access, 
+				limit=pagination['limit'], 
+				offset=start
+				).all()
 
-			response = {'data': [item.as_dict() for item in persons],
-						'pagination': pagination }
+			response = {
+				'data': [item.as_dict() for item in persons],
+				'pagination': pagination
+				}
 
 		except Exception as e:
-			logging.error("call PersonHandler::render_strategy_list - database invalid error")
-			raise tornado.web.HTTPError(self.HTTP_STATUS_CODE_INTERNAL_ERROR, 'por favor, contate um administrador')
-			
+			logging.error(
+				"call PersonHandler::render_strategy_list - database invalid error"
+				)
+			raise tornado.web.HTTPError(
+				self.HTTP_STATUS_CODE_INTERNAL_ERROR,
+				'por favor, contate um administrador'
+				)
 
 		return json.dumps(response)
 
-	# Trata a escolha do algoritmo que será utilizado para devolver o resultado esperado pelo cliente
+	"""
+	# Trata a escolha do algoritmo que será utilizado para devolver 
+	#o resultado esperado pelo cliente
 	#
 	#<code>
 	#returns:
@@ -96,25 +118,31 @@ class PersonHandler(BaseHandler):
 	#>&nbsp;&nbsp;}	<br/>
 	#>}<br/>
 	#</code>
-	
+	"""
 	def render_response(self, facebookId, limit):
 		if facebookId is not None:
 			return self.render_strategy_unique(facebookId)
-		else :
+		else:
 			return self.render_strategy_list(limit)
 
 	def get(self, facebookId=None):
-		self.write(self.render_response(facebookId, self.get_argument("limit", None, True)))
+		self.write(
+			self.render_response(
+				facebookId,
+				self.get_argument("limit", None, True)
+				)
+			)
 		self.set_header("Content-Type", "application/json")
 		self.finish()
-
+	"""
 	# Salva o usuário a partir do seu facebookId
 	#<code><br>
 	#return:
 	#>{'pk': 1}
 	#</code>
+	"""
 	@tornado.web.asynchronous
-	def post (self):
+	def post(self):
 		raiseErrorIfNull = True
 		facebookId = self.post_data('facebookId', raiseErrorIfNull)
 		self.validate_facebookid(facebookId)
@@ -125,20 +153,33 @@ class PersonHandler(BaseHandler):
 
 		if returns_count > 0:
 			self.clear()
-			logging.error("call PersonHandler::post - registro de usuario duplicado, ou tentativa de duplicacao na base {0}".format(facebookId))
-			raise tornado.web.HTTPError(self.HTTP_STATUS_CODE_INTERNAL_ERROR, 'duplicacao de registro, por favor utilize o verbo put para editar o registro ou contate o adminstrados levando facebookid')
-				
+			logging.error(
+				"call PersonHandler::post - \
+				registro de usuario duplicado, \
+				ou tentativa de duplicacao na base {0}".format(facebookId))
+			raise tornado.web.HTTPError(
+				self.HTTP_STATUS_CODE_INTERNAL_ERROR,
+				'duplicacao de registro, por favor utilize o verbo put para \
+				editar o registro ou contate o adminstrados levando facebookid')
+
 		http = AsyncHTTPClient()
-		http.fetch(settings.FACEBOOK_GRAPH_URL.format(facebookId), self._on_finishcall)
-		
+		http.fetch(
+			settings.FACEBOOK_GRAPH_URL.format(facebookId),
+			self._on_finishcall
+			)
+
 	def _on_finishcall(self, response):
 		facebookData = json.loads(response.body)
 
-		if facebookData.has_key('error'):
-			logging.error("call PersonHandler::_on_finishcall - usuario nao encontrado no facebook ")
+		if 'error' in facebookData:
+			logging.error("call PersonHandler::\
+				_on_finishcall - usuario nao encontrado no facebook ")
 			self.clear()
-			raise tornado.web.HTTPError(self.HTTP_STATUS_CODE_BAD_REQUEST, 'facebookId inexistente')
-		
+			raise tornado.web.HTTPError(
+				self.HTTP_STATUS_CODE_BAD_REQUEST,
+				'facebookId inexistente'
+				)
+
 		person = Person(**facebookData)
 		person.facebookId = facebookData['id']
 		inserted_pk = person.save(self._data_access)
@@ -148,33 +189,43 @@ class PersonHandler(BaseHandler):
 		self.finish()
 
 	def put(self):
-		logging.warning('call: PersonHandler::put - metodo nao implementado sendo chamado.')
+		logging.warning('call: PersonHandler::put - metodo nao \
+			implementado sendo chamado.')
 		raise NotImplementedError
-
+	"""
 	# Remove o usuário a partir do seu facebookId
 	#<code><br>
 	#return:
 	#>{'facebookId': 00000000000, 'deleted': True}
 	#</code>
+	"""
 	def delete(self, facebookId):
-		self.validate_facebookid(facebookId) # redundante pela validacao da url, porem outras urls podem utiliza o mesmo metodo
+		# redundante pela validacao da url
+		self.validate_facebookid(facebookId) 
 		deleted = False
 		try:
 			person = Person.one(self._data_access, facebookId=facebookId)
 		except:
 			logging.error("call PersonHandler::delete - facebookid invalido")
-			raise tornado.web.HTTPError(self.HTTP_STATUS_CODE_BAD_REQUEST, 'facebookId invalido')
+			raise tornado.web.HTTPError(
+				self.HTTP_STATUS_CODE_BAD_REQUEST,
+				'facebookId invalido'
+				)
 
 		try:
 			deleted = person.delete(self._data_access)
 			self.set_status(self.HTTP_STATUS_CODE_NO_CONTENT)
 
 		except Exception, e:
-			logging.error("call PersonHandler::delete error: {0}".format(str(e)))
-			logging.error("call PersonHandler::post - registro de usuario duplicado, ou tentativa de duplicacao na base {0}".format(facebookId))
+			logging.error(
+				"call PersonHandler::delete error: {0}".format(str(e))
+				)
+			logging.error(
+				"call PersonHandler::post - registro de usuario duplicado,\
+				 ou tentativa de duplicacao na base {0}".format(facebookId)
+				)
 			raise e
 
 		self.write({'facebookId': facebookId, 'deleted': deleted})
 		self.set_header("Content-Type", "application/json")
-		self.finish()	
-		
+		self.finish()

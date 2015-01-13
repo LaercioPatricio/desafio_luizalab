@@ -15,16 +15,17 @@ from sqlalchemy.ext.declarative import declarative_base
 
 Base = declarative_base()
 
+
 class Person(Model, Base):
 	__tablename__ = 'Person'
-	
 	facebookId = Column(String(30), nullable=False)
 	username = Column(String(200), nullable=False)
 	name = Column(String(200), nullable=False)
 	gender = Column(String(20), nullable=False)
-		
+
 	def __repr__(self):
-	    return "<Person('%s')>" % (self.username)
+		return "<Person('%s')>" % (self.username)
+
 
 def init_db(engine):
-    Base.metadata.create_all(bind=engine)
+	Base.metadata.create_all(bind=engine)
