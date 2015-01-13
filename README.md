@@ -38,13 +38,13 @@ http://localhost:5000/static/docs/index.html
 ### Rodando os testes do CRUD utilizando a abstração programada por mim
 ```bash
 
-python test_crud.py
+$ (env)python test_crud.py
 
 ```
 ### Rodando os testes do tornadoweb utilizando urls da API produzida como desafio
 
 ```bash
-python test_tornado_app.py
+$ (env)python test_tornado_app.py
 
 ```
 
@@ -52,5 +52,4 @@ python test_tornado_app.py
 Para vizualizar a documentação dos serviços expostos, após inicializar o serviço, utilize a url: <a href="http://localhost:5000/static/docs/index.html">`http://localhost:5000/static/docs/index.html`</a> 
 
 ## Documentação do código
-Para visualizar a documentação do código após inicializar o serviço, utilize a url: <a href="http://localhost:5000/static/docs/__init__.html">`http://localhost:5000/static/docs/__init__.html`</a> 
-
+Para visualizar a documentação do código após inicializar o serviço, utilize a url: <a href="http://localhost:5000/static/docs/__init__.html">`http://localhost:5000/static/docs/__init__.html`</a>
