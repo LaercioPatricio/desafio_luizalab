@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="content-type" content="text/html;charset=utf-8">
+  <title>models.py</title>
+  <link rel="stylesheet" href="../pycco.css">
+</head>
+<body>
+<div id="background"></div>
+<div id='container'>
+  <div class='section'>
+    <div class='docs'><h1>models.py</h1></div>
+  </div>
+  <div class='clearall'>
+  <div class='section' id='section-0'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-0'>#</a>
+      </div>
+      <p>-<em>- coding: utf-8 -</em>-
+-<em>- coding: utf-8 -</em>-</p>
+<h1>DESAFIO LUIZALABS</h1>
+<p>autor: @LaercioPatricio <br />
+project: @luizalabs
+<br></p>
+<blockquote>
+<p>Abstracao para o acesso ao banco, afim de manter uma inteface unica acima do sqlalchemy, diminuindo a visibilidade de consumidor final, para caso seja necessario alterar o acesso aos dados o código final não seja alterado</p>
+</blockquote>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span class="kn">import</span> <span class="nn">logging</span>
+<span class="kn">import</span> <span class="nn">tornado.web</span>
+<span class="kn">from</span> <span class="nn">sqlalchemy</span> <span class="kn">import</span> <span class="n">Column</span><span class="p">,</span> <span class="n">Integer</span>
+<span class="kn">from</span> <span class="nn">sqlalchemy</span> <span class="kn">import</span> <span class="n">func</span>
+
+<span class="kn">import</span> <span class="nn">sys</span>
+<span class="kn">import</span> <span class="nn">inspect</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-1'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-1'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span class="k">class</span> <span class="nc">AbstractModel</span><span class="p">(</span> <span class="nb">object</span> <span class="p">):</span>
+	<span class="k">pass</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-2'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-2'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span class="k">class</span> <span class="nc">Model</span><span class="p">(</span> <span class="n">AbstractModel</span> <span class="p">):</span>
+	<span class="n">pk</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">Integer</span><span class="p">,</span> <span class="n">primary_key</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+	<span class="n">_model_classname</span><span class="o">=</span> <span class="s">&quot;&quot;</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-3'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-3'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>	<span class="nd">@classmethod</span>
+	<span class="k">def</span> <span class="nf">all</span> <span class="p">(</span><span class="n">cls</span><span class="p">,</span> <span class="n">instance_database</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+		<span class="k">return</span> <span class="n">instance_database</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">cls</span><span class="p">)</span><span class="o">.</span><span class="n">filter_by</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span><span class="o">.</span><span class="n">all</span><span class="p">()</span>
+
+	<span class="nd">@classmethod</span>
+	<span class="k">def</span> <span class="nf">one</span> <span class="p">(</span><span class="n">cls</span><span class="p">,</span> <span class="n">instance_database</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+		<span class="k">return</span> <span class="n">instance_database</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">cls</span><span class="p">)</span><span class="o">.</span><span class="n">filter_by</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span><span class="o">.</span><span class="n">one</span><span class="p">()</span>
+
+	<span class="nd">@classmethod</span>
+	<span class="k">def</span> <span class="nf">count</span><span class="p">(</span><span class="n">cls</span><span class="p">,</span> <span class="n">instance_database</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+		<span class="k">return</span> <span class="n">instance_database</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">func</span><span class="o">.</span><span class="n">count</span><span class="p">(</span><span class="n">cls</span><span class="o">.</span><span class="n">pk</span><span class="p">))</span><span class="o">.</span><span class="n">scalar</span><span class="p">()</span>
+
+	<span class="nd">@classmethod</span>
+	<span class="k">def</span> <span class="nf">get_page</span><span class="p">(</span><span class="n">cls</span><span class="p">,</span> <span class="n">instance_database</span><span class="p">,</span> <span class="n">limit</span><span class="p">,</span> <span class="n">offset</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+		<span class="k">return</span> <span class="n">instance_database</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">cls</span><span class="p">)</span><span class="o">.</span><span class="n">limit</span><span class="p">(</span><span class="n">limit</span><span class="p">)</span><span class="o">.</span><span class="n">offset</span><span class="p">(</span><span class="n">offset</span><span class="p">)</span>
+
+	<span class="k">def</span> <span class="nf">save</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">instance_database</span><span class="p">):</span>
+		<span class="n">indentity</span><span class="o">=</span><span class="mi">0</span>
+		<span class="k">try</span><span class="p">:</span>
+			<span class="n">instance_database</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+			<span class="n">instance_database</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
+
+		<span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+			<span class="n">logging</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s">&#39;call PersonHandler::_on_finishcall falha ao tentar incluir um registro no banco de dados:&#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">))</span>
+			<span class="n">instance_database</span><span class="o">.</span><span class="n">rollback</span><span class="p">()</span>
+
+		<span class="k">finally</span><span class="p">:</span>
+			<span class="n">indentity</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">pk</span>
+			<span class="n">instance_database</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+
+		<span class="k">return</span> <span class="n">indentity</span>
+
+	<span class="k">def</span> <span class="nf">delete</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">instance_database</span><span class="p">):</span>
+		<span class="n">deleted</span><span class="o">=</span><span class="bp">False</span>
+		<span class="k">try</span><span class="p">:</span>
+			<span class="n">instance_database</span><span class="o">.</span><span class="n">delete</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+			<span class="n">instance_database</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
+			<span class="n">deleted</span> <span class="o">=</span><span class="bp">True</span>
+		<span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+			<span class="n">logging</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s">&#39;call PersonHandler::_on_finishcall falha ao tentar incluir um registro no banco de dados:&#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">))</span>
+			<span class="n">instance_database</span><span class="o">.</span><span class="n">rollback</span><span class="p">()</span>
+
+		<span class="k">finally</span><span class="p">:</span>
+			<span class="n">indentity</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">pk</span>
+			<span class="n">instance_database</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+
+		<span class="k">return</span> <span class="n">deleted</span>
+
+	<span class="k">def</span> <span class="nf">as_dict</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+		<span class="k">return</span> <span class="p">{</span><span class="n">col</span><span class="o">.</span><span class="n">name</span><span class="p">:</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">col</span><span class="o">.</span><span class="n">name</span><span class="p">)</span> <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">__table__</span><span class="o">.</span><span class="n">columns</span><span class="p">}</span>
+
+	<span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+		<span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="p">:</span>
+			<span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">):</span>
+				<span class="nb">setattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">kwargs</span><span class="p">[</span><span class="n">key</span><span class="p">])</span>
+
+</pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+</div>
+</body>

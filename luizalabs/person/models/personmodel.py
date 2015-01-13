@@ -1,7 +1,11 @@
 # -*- coding: utf-8 -*-
-# autor: @LaercioPatricio <br />
-# project: @luizalabs
-
+"""
+# DESAFIO LUIZALABS
+autor: @LaercioPatricio <br />
+project: @luizalabs
+<br>
+> Persiste dados da pessoa. Incluidos por cópia de registro no facebook
+"""
 import logging
 import re
 from core.models import Model
@@ -11,8 +15,6 @@ from sqlalchemy.ext.declarative import declarative_base
 
 Base = declarative_base()
 
-# #Person: ValueObject #
-# __class__: persiste dados da pessoa. Incluidos por cópia de registro no facebook
 class Person(Model, Base):
 	__tablename__ = 'Person'
 	

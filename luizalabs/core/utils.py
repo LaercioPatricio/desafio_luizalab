@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-# -*- coding: utf-8 -*-
 """
 # DESAFIO LUIZALABS
 autor: @LaercioPatricio <br />

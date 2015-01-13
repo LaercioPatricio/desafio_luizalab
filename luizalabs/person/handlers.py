@@ -1,3 +1,12 @@
+# -*- coding: utf-8 -*-
+"""
+# DESAFIO LUIZALABS
+autor: @LaercioPatricio <br />
+project: @luizalabs
+<br>
+Trata as requisições para api person
+"""
+
 import tornado.web
 import tornado.gen
 from tornado.httpclient import AsyncHTTPClient
@@ -12,6 +21,7 @@ import settings
 import core.utils as utils
 
 class PersonHandler(BaseHandler):
+	#Segurança dos dados 
 	def validate_facebookid(self, facebookId):
 		match_validate = re.match(r'^[0-9]+$', facebookId)
 		if not match_validate:
@@ -19,6 +29,7 @@ class PersonHandler(BaseHandler):
 			logging.error("call PersonHandler::post - facebookid invalido")
 			raise tornado.web.HTTPError(self.HTTP_STATUS_CODE_BAD_REQUEST, 'facebookId invalido')
 
+	# Trata a requisição para o caso o resgate de somente um person 
 	def render_strategy_unique(self, facebookId):
 		try:
 			person = Person.one(self._data_access, facebookId=facebookId)
@@ -28,6 +39,7 @@ class PersonHandler(BaseHandler):
 
 		return json.dumps(person.as_dict())
 
+	# Trata a requisição para retorno de lista 
 	def render_strategy_list(self, limit):
 		page = self.get_argument("page", 1, True)
 		start = -1
@@ -55,6 +67,36 @@ class PersonHandler(BaseHandler):
 
 		return json.dumps(response)
 
+	# Trata a escolha do algoritmo que será utilizado para devolver o resultado esperado pelo cliente
+	#
+	#<code>
+	#returns:
+	#>//unique<br>
+	#>{<br/>
+	#>&nbsp;&nbsp;name:'Fulano', <br/>
+	#>&nbsp;&nbsp;username:'fulano.siclano', <br/>
+	#>&nbsp;&nbsp;gender:'male',<br/> 
+	#>&nbsp;&nbsp;FacebookId:'00000000000'<br/>
+	#>}<br><br>
+	#//list	<br>
+	#>{<br/>
+	#>&nbsp;data:[{<br/>
+	#>&nbsp;&nbsp;&nbsp;name:'Fulano', <br/>
+	#>&nbsp;&nbsp;&nbsp;username:'fulano.siclano', <br/>
+	#>&nbsp;&nbsp;&nbsp;gender:'male', <br/>
+	#>&nbsp;&nbsp;&nbsp;FacebookId:'00000000000'<br/>
+	#>&nbsp;}],<br/>
+	#>&nbsp;{pagination:<br/>
+	#>&nbsp;&nbsp;{'pages': 10,<br/>
+ 	#>&nbsp;&nbsp;&nbsp;'page': 1,<br/>
+	#>&nbsp;&nbsp;&nbsp;'total_count': 100,<br/>
+	#>&nbsp;&nbsp;&nbsp;'limit': 10,<br/>
+	#>&nbsp;&nbsp;&nbsp;'has_next': True,<br/>
+	#>&nbsp;&nbsp;&nbsp;'has_preview': False<br/>
+	#>&nbsp;&nbsp;}	<br/>
+	#>}<br/>
+	#</code>
+	
 	def render_response(self, facebookId, limit):
 		if facebookId is not None:
 			return self.render_strategy_unique(facebookId)
@@ -66,6 +108,11 @@ class PersonHandler(BaseHandler):
 		self.set_header("Content-Type", "application/json")
 		self.finish()
 
+	# Salva o usuário a partir do seu facebookId
+	#<code><br>
+	#return:
+	#>{'pk': 1}
+	#</code>
 	@tornado.web.asynchronous
 	def post (self):
 		raiseErrorIfNull = True
@@ -104,6 +151,11 @@ class PersonHandler(BaseHandler):
 		logging.warning('call: PersonHandler::put - metodo nao implementado sendo chamado.')
 		raise NotImplementedError
 
+	# Remove o usuário a partir do seu facebookId
+	#<code><br>
+	#return:
+	#>{'facebookId': 00000000000, 'deleted': True}
+	#</code>
 	def delete(self, facebookId):
 		self.validate_facebookid(facebookId) # redundante pela validacao da url, porem outras urls podem utiliza o mesmo metodo
 		deleted = False
