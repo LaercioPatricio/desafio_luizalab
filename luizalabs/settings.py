@@ -10,8 +10,8 @@ define("debug", default=True, type=bool)
 define("db_path", default=('sqlite:///%s' % DATABASE_STRING), type=str)
 
 config = dict(
-	debug=options.debug,
-	port=options.port,
-	database_path=options.db_path,
-	static_path=os.path.join(ROOT_PATH, 'static')
-	)
+    debug=options.debug,
+    port=options.port,
+    database_path=options.db_path,
+    static_path=os.path.join(ROOT_PATH, 'static')
+    )
