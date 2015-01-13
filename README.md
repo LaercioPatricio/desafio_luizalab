@@ -49,8 +49,8 @@ python test_tornado_app.py
 ```
 
 ## Documentação
-Para vizualizar a documentação dos serviços expostos, após inicializar o serviço, utilize a url: __http://localhost:5000/static/docs/index.html__
+Para vizualizar a documentação dos serviços expostos, após inicializar o serviço, utilize a url: <a href="http://localhost:5000/static/docs/index.html">`http://localhost:5000/static/docs/index.html`</a>
 
 ## Documentação do código
-Para visualizar a documentação do código após inicializar o serviço, utilize a url: <a href="http://localhost:5000/static/docs/__init__.html">http://localhost:5000/static/docs/__init__.html</a>
+Para visualizar a documentação do código após inicializar o serviço, utilize a url: <a href="http://localhost:5000/static/docs/__init__.html">`http://localhost:5000/static/docs/__init__.html`</a>
 
